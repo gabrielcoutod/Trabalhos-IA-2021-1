@@ -80,7 +80,8 @@ def caminho(end):
         caminho.append(curr.acao)
         curr = curr.pai
 
-    caminho[:-1].reverse()
+    del caminho[-1]
+    caminho.reverse()
     return caminho
 
 class ErroBusca(Exception):
