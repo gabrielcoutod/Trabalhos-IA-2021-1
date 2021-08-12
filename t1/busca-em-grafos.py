@@ -30,26 +30,23 @@ def sucessor(estado: str):
 
     if espaco_vazio - 1 >= 0: # esquerda
         index = espaco_vazio - 1
-        estado_lst = list(estado)
-        estado_lst[index], estado_lst[espaco_vazio] = estado_lst[espaco_vazio], estado_lst[index]
-        lst.append(("esquerda","".join(estado_lst)))
+        lst.append(("esquerda", troca_pecas(estado, index, espaco_vazio)))
     if espaco_vazio + 1 < len_estado: # direita
         index = espaco_vazio + 1
-        estado_lst = list(estado)
-        estado_lst[index], estado_lst[espaco_vazio] = estado_lst[espaco_vazio], estado_lst[index]
-        lst.append(("direita","".join(estado_lst)))
+        lst.append(("direita", troca_pecas(estado, index, espaco_vazio)))
     if espaco_vazio - 3 >= 0 : # acima
         index = espaco_vazio - 3
-        estado_lst = list(estado)
-        estado_lst[index], estado_lst[espaco_vazio] = estado_lst[espaco_vazio], estado_lst[index]
-        lst.append(("acima","".join(estado_lst)))
+        lst.append(("acima", troca_pecas(estado, index, espaco_vazio)))
     if espaco_vazio + 3 < len_estado: # abaixo
         index = espaco_vazio + 3
-        estado_lst = list(estado)
-        estado_lst[index], estado_lst[espaco_vazio] = estado_lst[espaco_vazio], estado_lst[index]
-        lst.append(("abaixo","".join(estado_lst)))
+        lst.append(("abaixo", troca_pecas(estado, index, espaco_vazio)))
     
     return lst
+
+def troca_pecas(estado, index_1, index_2):
+        estado_lst = list(estado)
+        estado_lst[index_1], estado_lst[index_2] = estado_lst[index_2], estado_lst[index_1]
+        return "".join(estado_lst)
 
 def expande(nodo: Nodo):
     ''' Expande um nodo, retornando os nodos sucessores do nodo passado como argumento.'''
@@ -59,3 +56,4 @@ def expande(nodo: Nodo):
         nodo_sucessor = Nodo(suc[1], nodo.estado, suc[0], nodo.custo + 1)
         lst_sucessores.append(nodo_sucessor)
     return lst_sucessores
+
