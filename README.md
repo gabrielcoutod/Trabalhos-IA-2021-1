@@ -18,8 +18,13 @@ A disciplina é compoista por uma sequência de cinco trabalhos práticos voltad
   5. [...]()
 
 ## Testes
-Para testar cada uma das implementações é necessário ter instalado um interpretador Python 3.8, com Miniconda, Pip, Numba, Numpy e Pandas. Para isso, executamos o seguinte código
+Para testar cada uma das implementações é necessário ter instalado um interpretador Python 3.8, com Miniconda, Pip, Numba, Numpy e Pandas. Para isso, executamos o seguinte código no Linux:
 
 ```
 $ python3 nome_arquivo.py
+```
+
+no Windows
+```
+$ python nome_arquivo.py
 ```
