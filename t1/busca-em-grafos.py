@@ -14,7 +14,7 @@ from typing import Any
 
 
 class Nodo:
-    ''' Classe que representa um nodo no grafo.'''
+    '''Classe que representa um nodo no grafo.'''
     
     def __init__(self, estado, pai, acao, custo):
         self.estado = estado    # estado atual do 8-puzzle
@@ -27,7 +27,39 @@ class Nodo:
     def __str__(self):
         pai = self.pai.estado if self.pai is not None else None
         return "estado: " + str(self.estado) + ", pai: " + str(pai)  + ", acao: " + str(self.acao) + ", custo: " + str(self.custo)
+
+@dataclass(order=True)
+class NodoHeuristica:
+    '''Classe que representa uma tupla com um nodo e sua prioridade.'''
+    priority: int
+    item: Any=field(compare=False)
+
+class PriorityQueueAstar:
+    '''Classe para a fila de prioridade para o algoritmo A*.'''
+    def __init__(self, heuristica):
+        self.pqueue = queue.PriorityQueue()
+        self.heuristica = heuristica
+
+    def put(self, val):
+        self.pqueue.put(NodoHeuristica(priority=self.heuristica(val.estado) + val.custo,item = val))
+
+    def get(self):
+        return self.pqueue.get().item
+
+    def empty(self):
+        return self.pqueue.empty()
+
+class SetNodos(set):
+    '''Classe para um conjunto de nodos.'''
+    def add(self, item):
+        super().add(item)
+
+class ListNodos(list):
+    '''Classe para uma lista de nodos.'''
+    def add(self, item):
+        self.append(item)
     
+
 
 def sucessor(estado: str):
     ''' Recebe um estado e retorna uma lista de tuplas (acao, estado atingido). '''
@@ -51,6 +83,7 @@ def sucessor(estado: str):
     return lst
 
 def troca_pecas(estado, index_1, index_2):
+        '''Dado um estado e dois indices, troca as peças.'''
         estado_lst = list(estado)
         estado_lst[index_1], estado_lst[index_2] = estado_lst[index_2], estado_lst[index_1]
         return "".join(estado_lst)
@@ -66,27 +99,12 @@ def expande(nodo: Nodo):
         
     return lst_sucessores
 
-def estado_objetivo(v):
-    return v == "12345678_"
-
-def caminho(end):
-    # end, busca pai do end com menor valor loop
-    caminho = []
-    caminho.append(end.acao)
-    curr = end.pai
-
-    while curr is not None:
-        caminho.append(curr.acao)
-        curr = curr.pai
-
-    del caminho[-1]
-    caminho.reverse()
-    return caminho
-
 class ErroBusca(Exception):
+    '''Exceção para erro na busca'''
     pass
 
 def busca_grafo(start, construtor_fronteira, construtor_expandidos):
+    '''Realiza a busca no grafo.'''
     X = construtor_expandidos()
     F = construtor_fronteira()
     F.put(Nodo(start, None, None, 0))
@@ -104,19 +122,48 @@ def busca_grafo(start, construtor_fronteira, construtor_expandidos):
     
     raise ErroBusca("Não encontrou estado final")
 
+def estado_objetivo(v):
+    '''Verifica se o estado final foi atingido.'''
+    return v == "12345678_"
+
+def caminho(end):
+    '''Retorna o caminho até o nodo atual.'''
+    caminho = []
+    caminho.append(end.acao)
+    curr = end.pai
+
+    while curr is not None:
+        caminho.append(curr.acao)
+        curr = curr.pai
+
+    del caminho[-1]
+    caminho.reverse()
+    return caminho
+
 def bfs(estado):
+    '''Executa o BFS.'''
     return busca_grafo(estado, queue.Queue, SetNodos)
 
 def dfs(estado):
+    '''Executa o DFS.'''
     return busca_grafo(estado, queue.LifoQueue, SetNodos)
 
 def astar_hamming(estado):
-    return busca_grafo(estado, PriorityQueueHamming, ListNodos)
+    '''Executa o A* com a heuristica hamming.'''
+    return busca_grafo(estado, lambda : PriorityQueueAstar(hamming), ListNodos)
 
 def astar_manhattan(estado):   
-    return busca_grafo(estado, PriorityQueueManhattan, ListNodos)
+    '''Executa o A* com a heuristica manhattan.'''
+    return busca_grafo(estado, lambda : PriorityQueueAstar(manhattan), ListNodos)
 
 
+def hamming(estado):
+    '''Calculo da distancia de hamming.'''
+    return 9 - sum(char1 == char2 for char1, char2 in zip("12345678_", estado))
+
+'''
+Posições corretas das peças no puzzle.
+'''
 posicao_correta = {
     "1":(0,0),
     "2":(0,1),
@@ -128,52 +175,8 @@ posicao_correta = {
     "8":(2,2)
 }
 
-@dataclass(order=True)
-class NodoHeuristica:
-    priority: int
-    item: Any=field(compare=False)
-
-class PriorityQueueManhattan:
-
-    def __init__(self):
-        self.pqueue = queue.PriorityQueue()
-
-    def put(self, val):
-        self.pqueue.put(NodoHeuristica(priority=manhattan(val.estado) + val.custo,item = val))
-
-    def get(self):
-        return self.pqueue.get().item
-
-    def empty(self):
-        return self.pqueue.empty()
-
-class PriorityQueueHamming:
-
-    def __init__(self):
-        self.pqueue = queue.PriorityQueue()
-
-    def put(self, val):
-        self.pqueue.put(NodoHeuristica(priority=hamming(val.estado) + val.custo,item = val))
-
-    def get(self):
-        return self.pqueue.get().item
-    
-    def empty(self):
-        return self.pqueue.empty()
-
-class SetNodos(set):
-    def add(self, item):
-        super().add(item)
-
-class ListNodos(list):
-    def add(self, item):
-        self.append(item)
-
-def hamming(estado):
-    return 9 - sum(char1 == char2 for char1, char2 in zip("12345678_", estado))
-
-
 def manhattan(estado):
+    '''Calculo da distancia manhattan.'''
     vals = ["1","2","3","4","5","6","7","8"]
     
     estimativa = 0
