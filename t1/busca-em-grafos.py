@@ -11,7 +11,6 @@ Autores:
 import queue
 from dataclasses import dataclass, field
 from typing import Any
-import pdb
 
 
 class Nodo:
@@ -87,8 +86,8 @@ def caminho(end):
 class ErroBusca(Exception):
     pass
 
-def busca_grafo_set(start, construtor_fronteira):
-    X = set()
+def busca_grafo(start, construtor_fronteira, construtor_expandidos):
+    X = construtor_expandidos()
     F = construtor_fronteira()
     F.put(Nodo(start, None, None, 0))
     
@@ -105,35 +104,17 @@ def busca_grafo_set(start, construtor_fronteira):
     
     raise ErroBusca("Não encontrou estado final")
 
-def busca_grafo(start, construtor_fronteira):
-    X = []
-    F = construtor_fronteira()
-    F.put(Nodo(start, None, None, 0))
-    
-    while not F.empty():
-        v = F.get()
-
-        if estado_objetivo(v.estado):
-            return caminho(v)
-        if v.estado not in X:
-            X.append(v.estado)
-            fronteira_v = expande(v)
-            for nodo_de_fronteira in fronteira_v:
-                F.put(nodo_de_fronteira)
-    
-    raise ErroBusca("Não encontrou estado final")
-
 def bfs(estado):
-    return busca_grafo_set(estado, queue.Queue)
+    return busca_grafo(estado, queue.Queue, SetNodos)
 
 def dfs(estado):
-    return busca_grafo_set(estado, queue.LifoQueue)
+    return busca_grafo(estado, queue.LifoQueue, SetNodos)
 
 def astar_hamming(estado):
-    return busca_grafo(estado, PriorityQueueHamming)
+    return busca_grafo(estado, PriorityQueueHamming, ListNodos)
 
 def astar_manhattan(estado):   
-    return busca_grafo(estado, PriorityQueueManhattan)
+    return busca_grafo(estado, PriorityQueueManhattan, ListNodos)
 
 
 posicao_correta = {
@@ -179,6 +160,14 @@ class PriorityQueueHamming:
     
     def empty(self):
         return self.pqueue.empty()
+
+class SetNodos(set):
+    def add(self, item):
+        super().add(item)
+
+class ListNodos(list):
+    def add(self, item):
+        self.append(item)
 
 def hamming(estado):
     return 9 - sum(char1 == char2 for char1, char2 in zip("12345678_", estado))
