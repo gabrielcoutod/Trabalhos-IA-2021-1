@@ -82,11 +82,12 @@ def sucessor(estado: str):
     
     return lst
 
+
 def troca_pecas(estado, index_1, index_2):
-        '''Dado um estado e dois indices, troca as peças.'''
-        estado_lst = list(estado)
-        estado_lst[index_1], estado_lst[index_2] = estado_lst[index_2], estado_lst[index_1]
-        return "".join(estado_lst)
+    '''Dado um estado e dois indices, troca as peças.'''
+    estado_lst = list(estado)
+    estado_lst[index_1], estado_lst[index_2] = estado_lst[index_2], estado_lst[index_1]
+    return "".join(estado_lst)
 
 def expande(nodo: Nodo):
     ''' Expande um nodo, retornando os nodos sucessores do nodo passado como argumento.'''
@@ -159,7 +160,7 @@ def astar_manhattan(estado):
 
 def hamming(estado):
     '''Calculo da distancia de hamming.'''
-    return sum(char1 != char2 for char1, char2 in zip("12345678_", estado)) - (1 if 8 != estado.find("_") else 0) 
+    return sum(char1 != char2 for char1, char2 in zip("12345678", estado))
 
 '''
 Posições corretas das peças no puzzle.
