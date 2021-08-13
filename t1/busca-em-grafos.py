@@ -159,7 +159,7 @@ def astar_manhattan(estado):
 
 def hamming(estado):
     '''Calculo da distancia de hamming.'''
-    return 9 - sum(char1 == char2 for char1, char2 in zip("12345678_", estado))
+    return sum(char1 != char2 for char1, char2 in zip("12345678_", estado)) - (1 if 8 != estado.find("_") else 0) 
 
 '''
 Posições corretas das peças no puzzle.
@@ -191,7 +191,7 @@ def manhattan(estado):
 
 
 
-estado = '4365_1278'
+estado = '_23541687'
 astar_hamming(estado)
 astar_manhattan(estado)
 bfs(estado)
