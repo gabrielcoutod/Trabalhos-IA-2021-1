@@ -87,6 +87,28 @@ def caminho(end):
 class ErroBusca(Exception):
     pass
 
+def busca_grafo_set(start, construtor_fronteira):
+    X = []
+    F = construtor_fronteira()
+    F_set = set()
+    F_set.add(start)
+    F.put(Nodo(start, None, None, 0))
+    
+    while not F.empty():
+        v = F.get()
+
+        if estado_objetivo(v.estado):
+            return caminho(v)
+        if v not in X:
+            X.append(v)
+            fronteira_v = expande(v)
+            for nodo_de_fronteira in fronteira_v:
+                if nodo_de_fronteira.estado not in F_set:
+                    F.put(nodo_de_fronteira)
+                    F_set.add(nodo_de_fronteira.estado)
+    
+    raise ErroBusca("Não encontrou estado final")
+
 def busca_grafo(start, construtor_fronteira):
     X = []
     F = construtor_fronteira()
@@ -94,7 +116,7 @@ def busca_grafo(start, construtor_fronteira):
     
     while not F.empty():
         v = F.get()
-        
+
         if estado_objetivo(v.estado):
             return caminho(v)
         if v not in X:
@@ -105,12 +127,11 @@ def busca_grafo(start, construtor_fronteira):
     
     raise ErroBusca("Não encontrou estado final")
 
-
 def bfs(estado):
-    return busca_grafo(estado, queue.Queue)
+    return busca_grafo_set(estado, queue.Queue)
 
 def dfs(estado):
-    return busca_grafo(estado, queue.LifoQueue)
+    return busca_grafo_set(estado, queue.LifoQueue)
 
 def astar_hamming(estado):
     return busca_grafo(estado, PriorityQueueHamming)
