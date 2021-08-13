@@ -34,20 +34,17 @@ class NodoHeuristica:
     priority: int
     item: Any=field(compare=False)
 
-class PriorityQueueAstar:
+class PriorityQueueAstar(queue.PriorityQueue):
     '''Classe para a fila de prioridade para o algoritmo A*.'''
     def __init__(self, heuristica):
-        self.pqueue = queue.PriorityQueue()
+        super().__init__()
         self.heuristica = heuristica
 
     def put(self, val):
-        self.pqueue.put(NodoHeuristica(priority=self.heuristica(val.estado) + val.custo,item = val))
+        super().put(NodoHeuristica(priority=self.heuristica(val.estado) + val.custo,item = val))
 
     def get(self):
-        return self.pqueue.get().item
-
-    def empty(self):
-        return self.pqueue.empty()
+        return super().get().item
 
 class SetNodos(set):
     '''Classe para um conjunto de nodos.'''
@@ -81,7 +78,6 @@ def sucessor(estado: str):
         lst.append(("abaixo", troca_pecas(estado, index, espaco_vazio)))
     
     return lst
-
 
 def troca_pecas(estado, index_1, index_2):
     '''Dado um estado e dois indices, troca as peças.'''
@@ -156,6 +152,7 @@ def astar_hamming(estado):
 def astar_manhattan(estado):   
     '''Executa o A* com a heuristica manhattan.'''
     return busca_grafo(estado, lambda : PriorityQueueAstar(manhattan), ListNodos)
+
 
 
 def hamming(estado):
