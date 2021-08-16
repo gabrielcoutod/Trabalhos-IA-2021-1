@@ -102,6 +102,9 @@ class ErroBusca(Exception):
 
 def busca_grafo(start, construtor_fronteira, construtor_expandidos):
     '''Realiza a busca no grafo.'''
+    if not solucionavel(start):
+        return None 
+
     X = construtor_expandidos()
     F = construtor_fronteira()
     F.put(Nodo(start, None, None, 0))
@@ -118,6 +121,18 @@ def busca_grafo(start, construtor_fronteira, construtor_expandidos):
                 F.put(nodo_de_fronteira)
     
     raise ErroBusca("Não encontrou estado final")
+
+def solucionavel(estado):
+    '''Verifica se o 8 puzzle tem solução.'''
+    estado_lst = [int(char) if char != '_' else 0 for char in estado]
+
+    inversoes = 0
+    for i in range(9):
+        for j in range(i+1,9):
+            if estado_lst[j] != 0 and estado_lst[i] > estado_lst[j]:
+                inversoes += 1
+
+    return inversoes % 2 == 0
 
 def estado_objetivo(v):
     '''Verifica se o estado final foi atingido.'''
