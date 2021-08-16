@@ -41,7 +41,7 @@ class PriorityQueueAstar(queue.PriorityQueue):
         self.heuristica = heuristica
 
     def put(self, val):
-        super().put(NodoHeuristica(priority=self.heuristica(val.estado) + val.custo,item = val))
+        super().put(NodoHeuristica(priority=self.heuristica(val.estado) + val.custo, item = val))
 
     def get(self):
         return super().get().item
@@ -184,8 +184,8 @@ posicao_correta = {
     "4":(1,0),
     "5":(1,1),
     "6":(1,2),
-    "7":(2,1),
-    "8":(2,2)
+    "7":(2,0),
+    "8":(2,1)
 }
 
 def manhattan(estado):
