@@ -201,11 +201,3 @@ def manhattan(estado):
         estimativa += abs(posicao_valor[0] - row) + abs(posicao_valor[1] - column)
         
     return estimativa
-
-
-
-estado = '_23541687'
-astar_hamming(estado)
-astar_manhattan(estado)
-bfs(estado)
-dfs(estado)
