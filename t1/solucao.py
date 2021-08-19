@@ -46,16 +46,6 @@ class PriorityQueueAstar(queue.PriorityQueue):
     def get(self):
         return super().get().item
 
-class SetNodos(set):
-    '''Classe para um conjunto de nodos.'''
-    def add(self, item):
-        super().add(item)
-
-class ListNodos(list):
-    '''Classe para uma lista de nodos.'''
-    def add(self, item):
-        self.append(item)
-    
 
 
 def sucessor(estado: str):
@@ -100,12 +90,12 @@ class ErroBusca(Exception):
     '''Exceção para erro na busca'''
     pass
 
-def busca_grafo(start, construtor_fronteira, construtor_expandidos):
+def busca_grafo(start, construtor_fronteira):
     '''Realiza a busca no grafo.'''
     if not solucionavel(start):
         return None 
 
-    X = construtor_expandidos()
+    X = set()
     F = construtor_fronteira()
     F.put(Nodo(start, None, None, 0))
     
@@ -154,19 +144,19 @@ def caminho(end):
 
 def bfs(estado):
     '''Executa o BFS.'''
-    return busca_grafo(estado, queue.Queue, SetNodos)
+    return busca_grafo(estado, queue.Queue)
 
 def dfs(estado):
     '''Executa o DFS.'''
-    return busca_grafo(estado, queue.LifoQueue, SetNodos)
+    return busca_grafo(estado, queue.LifoQueue)
 
 def astar_hamming(estado):
     '''Executa o A* com a heuristica hamming.'''
-    return busca_grafo(estado, lambda : PriorityQueueAstar(hamming), ListNodos)
+    return busca_grafo(estado, lambda : PriorityQueueAstar(hamming))
 
 def astar_manhattan(estado):   
     '''Executa o A* com a heuristica manhattan.'''
-    return busca_grafo(estado, lambda : PriorityQueueAstar(manhattan), ListNodos)
+    return busca_grafo(estado, lambda : PriorityQueueAstar(manhattan))
 
 
 
