@@ -8,9 +8,10 @@ Autores:
     Thiago Sotoriva Lermen
 '''
 
+# biblioteca para pilha, fila, fila de prioridades
 import queue
+# biblioteca para estrutura de dados que é utilizada pela fila de prioridades
 from dataclasses import dataclass, field
-from typing import Any
 
 
 class Nodo:
@@ -32,7 +33,7 @@ class Nodo:
 class NodoHeuristica:
     '''Classe que representa uma tupla com um nodo e sua prioridade.'''
     priority: int
-    item: Any=field(compare=False)
+    item: Nodo=field(compare=False)
 
 class PriorityQueueAstar(queue.PriorityQueue):
     '''Classe para a fila de prioridade para o algoritmo A*.'''
@@ -87,7 +88,7 @@ def expande(nodo: Nodo):
     return lst_sucessores
 
 class ErroBusca(Exception):
-    '''Exceção para erro na busca'''
+    '''Exceção para erro na busca.'''
     pass
 
 def busca_grafo(start, construtor_fronteira):
