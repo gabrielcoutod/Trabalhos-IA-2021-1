@@ -81,6 +81,10 @@ class TestaSolucao(unittest.TestCase):
         :param estado: str
         :return:
         """
+        # teste com estado 2_3541687
+        sol = solucao.dfs("2_3541687")
+        self.assertEqual('12345678_', testa_solucao('2_3541687', sol))
+
         # nao ha solucao a partir do estado 185423_67
         self.assertEqual(None, solucao.dfs("185423_67"))
 
