@@ -111,7 +111,8 @@ def busca_grafo(start, construtor_fronteira):
             for nodo_de_fronteira in fronteira_v:
                 F.put(nodo_de_fronteira)
     
-    raise ErroBusca("Não encontrou estado final")
+    # erro 
+    return None
 
 def solucionavel(estado):
     '''Verifica se o 8 puzzle tem solução.'''
