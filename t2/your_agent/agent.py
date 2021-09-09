@@ -92,4 +92,3 @@ def avalia_pos(the_board, color):
     mobility_weight = 30
     corner_weight = 50
     return (parity_weight * parity) + (mobility_weight * mobility) + (corner_weight * corner)
-
