@@ -1,13 +1,22 @@
+import numpy as np
+import random
+
 def evaluate(individual):
     """
     Recebe um indivíduo (lista de inteiros) e retorna o número de ataques
     entre rainhas na configuração especificada pelo indivíduo.
     Por exemplo, no individuo [2,2,4,8,1,6,3,4], o número de ataques é 9.
-
     :param individual:list
     :return:int numero de ataques entre rainhas no individuo recebido
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    count = 0
+    for i in range(8):
+        for j in range(i+1, 8):
+            k = j - i
+            if individual[i] == individual[j] or individual[i] == individual[j] + k or individual[i] == individual[j] - k:
+                count += 1
+    return count
+
 
 
 def tournament(participants):
@@ -17,7 +26,12 @@ def tournament(participants):
     :param participants:list - lista de individuos
     :return:list melhor individuo da lista recebida
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    pont = []
+    for i in participants:
+        pont.append(evaluate(i))
+
+    return participants[np.argmin(pont)]
+        
 
 
 def crossover(parent1, parent2, index):
@@ -34,7 +48,7 @@ def crossover(parent1, parent2, index):
     :param index:int
     :return:list,list
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    return parent1[:index] + parent2[index:], parent2[:index] + parent1[index:]
 
 
 def mutate(individual, m):
@@ -46,8 +60,18 @@ def mutate(individual, m):
     :param m:int - probabilidade de mutacao
     :return:list - individuo apos mutacao (ou intacto, caso a prob. de mutacao nao seja satisfeita)
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    individual = individual[:]
+    if  np.random.uniform(low=0, high=1) < m:
+        pos = np.random.randint(low=0, high=8)
+        val = np.random.randint(low=1, high=9)
+        individual[pos] = val
+    return individual
 
+def top(participants):
+    tops = []
+    for participant in participants:
+        tops.append(evaluate(participant))
+    return participants[np.argmin(tops)]
 
 def run_ga(g, n, k, m, e):
     """
@@ -59,4 +83,20 @@ def run_ga(g, n, k, m, e):
     :param e:bool - se vai haver elitismo
     :return:list - melhor individuo encontrado
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    #inicialização
+    p = [list(i) for i in np.random.randint(1, 9, size=(n, 8))]
+
+    for it in range(g):
+        if e:
+            new_p = [top(p)]
+        else:
+            new_p = []
+        while len(new_p) < n:
+            part_k1 = random.sample(p, k)
+            part_k2 = random.sample(p, k)
+            p1, p2 = tournament(part_k1), tournament(part_k2)
+            o1, o2 = crossover(p1, p2, np.random.randint(low=0, high=8))
+            o1, o2 = mutate(o1, m), mutate(o2, m)
+            new_p.extend([o1,o2])
+        p = new_p
+    return top(p)
