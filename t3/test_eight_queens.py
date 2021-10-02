@@ -1,5 +1,6 @@
 import unittest
 import eight_queens
+import timer
 
 
 class TestEightQueens(unittest.TestCase):
@@ -43,7 +44,7 @@ class TestEightQueens(unittest.TestCase):
         :return:
         """
         original = [2, 4, 7, 4, 8, 5, 5, 2]
-        mutated = eight_queens.mutate(original, 0)
+        mutated = eight_queens.mutate(original[:], 0)  # sends a copy of 'original'
         self.assertEqual(original, mutated)
 
     def test_mutate_prob_one(self):
@@ -55,8 +56,22 @@ class TestEightQueens(unittest.TestCase):
         :return:
         """
         original = [2, 4, 7, 4, 8, 5, 5, 2]
-        mutated = eight_queens.mutate(original, 1)
+        mutated = eight_queens.mutate(original[:], 1)  # sends a copy of 'original'
         self.assertNotEqual(original, mutated)
+
+    def test_run_ga(self):
+        """
+        Testa APENAS se o algoritmo executa no tempo especificado.
+        Nao avalia a qualidade da solucao encontrada nem a corretude da implementacao
+        :return:
+        """
+        response = timer.timeout(
+            eight_queens.run_ga,
+            args=(100, 40, 2, 0.3, True),
+            time_limit=60, default='timeout'
+        )
+        if response == 'timeout':
+            self.fail("run_ga ran out of time")
 
 
 if __name__ == '__main__':
