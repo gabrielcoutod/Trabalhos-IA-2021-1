@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 
 def evaluate(individual):
     """
@@ -86,7 +87,17 @@ def run_ga(g, n, k, m, e):
     #inicialização
     p = [list(i) for i in np.random.randint(1, 9, size=(n, 8))]
 
-    for it in range(g):
+    gens = []
+    min_p = []
+    max_p = []
+    mean_p = []
+
+    for gen in range(g):
+        min_p.append(min([evaluate(i) for i in p]))
+        max_p.append(max([evaluate(i) for i in p]))
+        mean_p.append(np.mean([evaluate(i) for i in p]))
+        gens.append(gen + 1)
+
         if e:
             new_p = [top(p)]
         else:
@@ -99,4 +110,18 @@ def run_ga(g, n, k, m, e):
             o1, o2 = mutate(o1, m), mutate(o2, m)
             new_p.extend([o1,o2])
         p = new_p
+
+    plot_data(min_p, max_p, mean_p, gens)
     return top(p)
+
+
+def plot_data(min_p, max_p, mean_p, gens):
+    plt.title("Oito Rainhas")
+    plt.xlabel('Geracao')
+    plt.ylabel('Conflitos')
+    plt.plot(gens, min_p, 'r', label='Menor numero de conflitos')
+    plt.plot(gens, max_p, 'g', label='Maior numero de conflitos')
+    plt.plot(gens, mean_p,'b', label='Media do numero de conflitos')
+    plt.legend()
+    plt.savefig('conflitos.png')
+    
