@@ -1,6 +1,5 @@
 import numpy as np
 import random
-import matplotlib.pyplot as plt
 
 def evaluate(individual):
     """
@@ -27,11 +26,10 @@ def tournament(participants):
     :param participants:list - lista de individuos
     :return:list melhor individuo da lista recebida
     """
-    pont = []
-    for i in participants:
-        pont.append(evaluate(i))
+    return min(participants, key = evaluate)
 
-    return participants[np.argmin(pont)]
+def top(participants):
+    return tournament(participants)
         
 
 
@@ -68,12 +66,6 @@ def mutate(individual, m):
         individual[pos] = val
     return individual
 
-def top(participants):
-    tops = []
-    for participant in participants:
-        tops.append(evaluate(participant))
-    return participants[np.argmin(tops)]
-
 def run_ga(g, n, k, m, e):
     """
     Executa o algoritmo genético e retorna o indivíduo com o menor número de ataques entre rainhas
@@ -87,21 +79,12 @@ def run_ga(g, n, k, m, e):
     #inicialização
     p = [list(i) for i in np.random.randint(1, 9, size=(n, 8))]
 
-    gens = []
-    min_p = []
-    max_p = []
-    mean_p = []
-
     for gen in range(g):
-        min_p.append(min([evaluate(i) for i in p]))
-        max_p.append(max([evaluate(i) for i in p]))
-        mean_p.append(np.mean([evaluate(i) for i in p]))
-        gens.append(gen + 1)
-
         if e:
             new_p = [top(p)]
         else:
             new_p = []
+
         while len(new_p) < n:
             part_k1 = random.sample(p, k)
             part_k2 = random.sample(p, k)
@@ -111,17 +94,4 @@ def run_ga(g, n, k, m, e):
             new_p.extend([o1,o2])
         p = new_p
 
-    plot_data(min_p, max_p, mean_p, gens)
     return top(p)
-
-
-def plot_data(min_p, max_p, mean_p, gens):
-    plt.title("Oito Rainhas")
-    plt.xlabel('Geracao')
-    plt.ylabel('Conflitos')
-    plt.plot(gens, min_p, 'r', label='Menor numero de conflitos')
-    plt.plot(gens, max_p, 'g', label='Maior numero de conflitos')
-    plt.plot(gens, mean_p,'b', label='Media do numero de conflitos')
-    plt.legend()
-    plt.savefig('conflitos.png')
-    

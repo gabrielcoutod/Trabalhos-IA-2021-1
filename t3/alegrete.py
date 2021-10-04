@@ -9,7 +9,7 @@ def compute_mse(theta_0, theta_1, data):
     :param data: np.array - matriz com o conjunto de dados, x na coluna 0 e y na coluna 1
     :return: float - o erro quadratico medio
     """
-    return 1/data.shape[0] * sum((theta_0 + theta_1*data[:,0] - data[:,1])**2)
+    return 1 * sum((theta_0 + theta_1*data[:,0] - data[:,1])**2) / data.shape[0] 
 
 
 def step_gradient(theta_0, theta_1, data, alpha):
@@ -21,8 +21,8 @@ def step_gradient(theta_0, theta_1, data, alpha):
     :param alpha: float - taxa de aprendizado (a.k.a. tamanho do passo)
     :return: float,float - os novos valores de theta_0 e theta_1, respectivamente
     """
-    d_theta_0 = 2/data.shape[0] * sum(theta_0 + theta_1*data[:,0] - data[:,1])
-    d_theta_1 = 2/data.shape[0] * sum((theta_0 + theta_1*data[:,0] - data[:,1]) * data[:,0])
+    d_theta_0 = 2 * sum(theta_0 + theta_1*data[:,0] - data[:,1]) / data.shape[0]
+    d_theta_1 = 2 * sum((theta_0 + theta_1*data[:,0] - data[:,1]) * data[:,0]) / data.shape[0]
     (new_theta_0, new_theta_1) = theta_0 - alpha * d_theta_0,  theta_1 - alpha * d_theta_1
     return (new_theta_0, new_theta_1)
 

@@ -12,11 +12,16 @@ TRABALHO 3 - Otimização
 :param k:int = 30 - numero de participantes do torneio\
 :param m:float = 0.9 - probabilidade de mutação (entre 0 e 1, inclusive)\
 :param e:bool = True - se vai haver elitismo\
-Menor número foi 0.
+
+Menor número de ataques foi 0.
 
 # Alegrete
 :param theta_0 = 0 - intercepto da reta\
 :param theta_1 = 0 - inclinacao da reta\
 :param alpha: 0.1 - taxa de aprendizado (a.k.a. tamanho do passo)\
 :param num_iterations: 200 - numero de épocas/iterações para executar a descida de gradiente\
+
 Erro quadrático médio: 0.5750118380197012
+
+# Bibliotecas Adicionais
+- Numpy
